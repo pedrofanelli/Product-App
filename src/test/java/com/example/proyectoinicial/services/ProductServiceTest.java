@@ -1,8 +1,10 @@
 package com.example.proyectoinicial.services;
 
 import com.example.proyectoinicial.dto.ProductRequest;
+import com.example.proyectoinicial.entities.Category;
 import com.example.proyectoinicial.entities.Product;
 import com.example.proyectoinicial.exceptions.InsufficientStockException;
+import com.example.proyectoinicial.repositories.CategoryRepository;
 import com.example.proyectoinicial.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,9 @@ import static org.mockito.Mockito.*;
 public class ProductServiceTest {
     @Mock
     private ProductRepository repository; // Simulamos el repositorio
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private ProductService productService; // Inyectamos el mock en el servicio
@@ -136,6 +141,34 @@ public class ProductServiceTest {
         assertEquals(productInDbOne, productList.get(0));
         assertEquals(productInDbThree, productList.get(1));
 
+    }
+
+    @Test
+    void shouldSaveWithCategorySuccessfully() {
+        // Arrange
+        ProductRequest request = new ProductRequest();
+        request.setName("Teclado");
+        request.setPrice(50.00);
+        request.setStock(10);
+        request.setCategoryId(1L);
+
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("Periféricos");
+
+        // Entrenamos ambos mocks
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        //"Oye, cuando alguien llame a save, mira lo que te pasaron como argumento y devuélveme eso mismo"
+        when(repository.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Act
+        Product result = productService.save(request);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("Periféricos", result.getCategory().getName());
+        verify(categoryRepository).findById(1L);
+        verify(repository).save(any(Product.class));
     }
 
 }

@@ -21,4 +21,7 @@ public class ProductRequest {
 
     @Min(value = 0, message = "El stock inicial no puede ser negativo")
     private Integer stock; // Nuevo campo
+
+    @Min(value = 0, message = "El ID de la categoría no puede ser negativa")
+    private Long categoryId;
 }

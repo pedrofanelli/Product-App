@@ -1,8 +1,11 @@
 package com.example.proyectoinicial.services;
 
 import com.example.proyectoinicial.dto.ProductRequest;
+import com.example.proyectoinicial.entities.Category;
 import com.example.proyectoinicial.entities.Product;
+import com.example.proyectoinicial.exceptions.CategoryNotFoundException;
 import com.example.proyectoinicial.exceptions.InsufficientStockException;
+import com.example.proyectoinicial.repositories.CategoryRepository;
 import com.example.proyectoinicial.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +23,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository repository;
+    private final CategoryRepository categoryRepository;
 
     public List<Product> findAll(){
         return repository.findAll();
     }
 
+    @Transactional
     public Product save(ProductRequest request) {
         Product product = new Product();
         product.setName(request.getName());
         product.setPrice(request.getPrice());
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
+
+        product.setCategory(category);
+
         return repository.save(product);
     }
 
