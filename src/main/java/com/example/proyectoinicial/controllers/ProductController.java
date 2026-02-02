@@ -20,13 +20,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> findAll(@RequestParam Optional<String> name){
+    public ResponseEntity<List<Product>> findAll(@RequestParam Optional<String> name){
 
         if (name.isPresent()){
-            return service.findAllByName(name.get());
+            return new ResponseEntity<>(service.findAllByName(name.get()), HttpStatus.OK);
         }
 
-        return service.findAll();
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
 
