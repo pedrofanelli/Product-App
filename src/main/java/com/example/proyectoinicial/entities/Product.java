@@ -16,6 +16,7 @@ public class Product {
     private Integer stock;
     private Boolean outOfStock = false; // Valor por defecto
 
+    //@ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
