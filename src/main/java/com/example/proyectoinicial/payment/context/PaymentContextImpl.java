@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class PaymentContext {
+public class PaymentContextImpl implements IPaymentContext {
 
     private final Map<String, PaymentStrategy> strategies;
 
     // Spring inyecta todas las estrategias a la lista y nosotros las mapeamos al iniciar
-    public PaymentContext(List<PaymentStrategy> strategyList) {
+    public PaymentContextImpl(List<PaymentStrategy> strategyList) {
         this.strategies = strategyList.stream()
                 .collect(Collectors.toMap(
                         PaymentStrategy::getServiceType, // La clave es el tipo (e.g., "PAYPAL")
@@ -27,6 +27,7 @@ public class PaymentContext {
                 ));
     }
 
+    @Override
     public void process(String type, double amount) {
         PaymentStrategy strategy = strategies.get(type.toUpperCase());
 

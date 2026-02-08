@@ -1,7 +1,7 @@
 package com.example.proyectoinicial.services;
 
 import com.example.proyectoinicial.payment.PaymentStrategy;
-import com.example.proyectoinicial.payment.context.PaymentContext;
+import com.example.proyectoinicial.payment.context.PaymentContextImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,9 +10,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class PaymentContextTest {
+public class PaymentContextImplTest {
 
-    private PaymentContext paymentContext;
+    private PaymentContextImpl paymentContext;
     private PaymentStrategy creditCardMock;
     private PaymentStrategy paypalMock;
 
@@ -28,7 +28,7 @@ public class PaymentContextTest {
 
         // 3. Instanciamos el contexto manualmente pasando la lista de mocks
         // Esto simula lo que Spring haría automáticamente
-        paymentContext = new PaymentContext(List.of(creditCardMock, paypalMock));
+        paymentContext = new PaymentContextImpl(List.of(creditCardMock, paypalMock));
     }
 
     @Test
